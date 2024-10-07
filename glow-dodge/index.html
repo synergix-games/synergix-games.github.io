@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!-- Created with https://packager.turbowarp.org/ -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- We only include this to explicitly loosen the CSP of various packager environments. It does not provide any security. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: blob:">
+  <title>Packaged Project</title>
+  <style>
+    body {
+      color: #ffffff;
+      font-family: sans-serif;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    :root, body.is-fullscreen {
+      background-color: #000000;
+    }
+    [hidden] {
+      display: none !important;
+    }
+    h1 {
+      font-weight: normal;
+    }
+    a {
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    #app, #loading, #error, #launch {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      cursor: default;
+      user-select: none;
+      -webkit-user-select: none;
+      background-color: #000000;
+    }
+    #launch {
+      background-color: rgba(0, 0, 0, 0.7);
+      cursor: pointer;
+    }
+    .green-flag {
+      width: 80px;
+      height: 80px;
+      padding: 16px;
+      border-radius: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      border: 3px solid hsla(0, 100%, 100%, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    #loading {
+      
+    }
+    .progress-bar-outer {
+      border: 1px solid currentColor;
+      height: 10px;
+      width: 200px;
+      max-width: 200px;
+    }
+    .progress-bar-inner {
+      height: 100%;
+      width: 0;
+      background-color: currentColor;
+    }
+    .loading-text, noscript {
+      font-weight: normal;
+      font-size: 36px;
+      margin: 0 0 16px;
+    }
+    .loading-image {
+      margin: 0 0 16px;
+    }
+    #error-message, #error-stack {
+      font-family: monospace;
+      max-width: 600px;
+      white-space: pre-wrap;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    #error-stack {
+      text-align: left;
+      max-height: 200px;
+      overflow: auto;
+    }
+    .control-button {
+      width: 2rem;
+      height: 2rem;
+      padding: 0.375rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: pointer;
+      border: 0;
+      border-radius: 4px;
+    }
+    .control-button:hover {
+      background: #ff4c4c26;
+    }
+    .control-button.active {
+      background: #ff4c4c59;
+    }
+    .fullscreen-button {
+      background: white !important;
+    }
+    .standalone-fullscreen-button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 0 0 0 4px;
+      padding: 4px;
+      cursor: pointer;
+    }
+    .sc-canvas {
+      cursor: auto;
+    }
+    .sc-monitor-root[data-opcode^="data_"] .sc-monitor-value-color {
+      background-color: #ff8c1a;
+    }
+    .sc-monitor-row-value-outer {
+      background-color: #fc662c;
+    }
+    .sc-monitor-row-value-editing .sc-monitor-row-value-outer {
+      background-color: #e25b27;
+    }
+    
+  </style>
+  <meta name="theme-color" content="#000000">
+  
+</head>
+<body>
+  <div id="app"></div>
+
+  <div id="launch" class="screen" hidden title="Click to start">
+    <div class="green-flag">
+      <svg viewBox="0 0 16.63 17.5" width="42" height="44">
+        <defs><style>.cls-1,.cls-2{fill:#4cbf56;stroke:#45993d;stroke-linecap:round;stroke-linejoin:round;}.cls-2{stroke-width:1.5px;}</style></defs>
+        <path class="cls-1" d="M.75,2A6.44,6.44,0,0,1,8.44,2h0a6.44,6.44,0,0,0,7.69,0V12.4a6.44,6.44,0,0,1-7.69,0h0a6.44,6.44,0,0,0-7.69,0"/>
+        <line class="cls-2" x1="0.75" y1="16.75" x2="0.75" y2="0.75"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="loading" class="screen">
+    <noscript>Enable JavaScript</noscript>
+    
+    
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="loading-inner"></div></div>
+  </div>
+
+  <div id="error" class="screen" hidden>
+    <h1>Error</h1>
+    <details>
+      <summary id="error-message"></summary>
+      <p id="error-stack"></p>
+    </details>
+  </div>
+
+  <script>/*!
+Parts of this script are from the TurboWarp Packager <https://packager.turbowarp.org/>, licensed as follows:
+Copyright (C) 2021-2024 Thomas Weber
+
+The Source Code Form of this program is available under the terms of the
+Mozilla Public License, v. 2.0. You can obtain a copy of the license at
+https://www.mozilla.org/en-US/MPL/2.0/.
+
+Parts of this script are from Scratch <https://scratch.mit.edu/>, licensed as follows:
+Copyright (c) 2016, Massachusetts Institute of Technology
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+/*! For license information please see scaffolding-min.js.LICENSE.txt */
+!function(e){function t(t){for(var n,i,s=t[0],o=t[1],a=0,c=[];a<s.length;a++)i=s[a],Object.prototype.hasOwnProperty.call(r,i)&&r[i]&&c.push(r[i][0]),r[i]=0;for(n in o)Object.prototype.hasOwnProperty.call(o,n)&&(e[n]=o[n]);for(l&&l(t);c.length;)c.shift()()}var n={},r={0:0};function i(t){if(n[t])return n[t].exports;var r=n[t]={i:t,l:!1,exports:{}};return e[t].call(r.exports,r,r.exports,i),r.l=!0,r.exports}i.e=function(e){var t=[],n=r[e];if(0!==n)if(n)t.push(n[2]);else{var s=new Promise((function(t,i){n=r[e]=[t,i]}));t.push(n[2]=s);var o,a=document.createElement("script");a.charset="utf-8",a.timeout=120,i.nc&&a.setAttribute("nonce",i.nc),a.src=function(e){return i.p+"scaffolding/"+({1:"vendors~iframe-extension-worker"}[e]||e)+".js"}(e);var l=new Error;o=function(t){a.onerror=a.onload=null,clearTimeout(c);var n=r[e];if(0!==n){if(n){var i=t&&("load"===t.type?"missing":t.type),s=t&&t.target&&t.target.src;l.message="Loading chunk "+e+" failed.\n("+i+": "+s+")",l.name="ChunkLoadError",l.type=i,l.request=s,n[1](l)}r[e]=void 0}};var c=setTimeout((function(){o({type:"timeout",target:a})}),12e4);a.onerror=a.onload=o,document.head.appendChild(a)}return Promise.all(t)},i.m=e,i.c=n,i.d=function(e,t,n){i.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},i.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,t){if(1&t&&(e=i(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(i.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var r in e)i.d(n,r,function(t){return e[t]}.bind(null,r));return n},i.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(t,"a",t),t},i.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},i.p="",i.oe=function(e){throw console.error(e),e};var s=window.webpackJsonp=window.webpackJsonp||[],o=s.push.bind(s);s.push=t,s=s.slice();for(var a=0;a<s.length;a++)t(s[a]);var l=o;i(i.s=425)}([function(e,t,n){var r=n(36),i=n(95),s=n(37),o=s.TYPE,a=n(93),l=a.isNewline,c=a.isName,u=a.isValidEscape,d=a.isNumberStart,h=a.isIdentifierStart,p=a.charCodeCategory,m=a.isBOM,f=n(27),g=f.cmpStr,y=f.getNewlineLength,b=f.findWhiteSpaceEnd,v=f.consumeEscaped,S=f.consumeName,w=f.consumeNumber,k=f.consumeBadUrlRemnants,x=16777215,T=24;function E(e,t){function n(t){return t<E?e.charCodeAt(t):0}function s(){return M=w(e,M),h(n(M),n(M+1),n(M+2))?(L=o.Dimension,void(M=S(e,M))):37===n(M)?(L=o.Percentage,void M++):void(L=o.Number)}function a(){const t=M;return M=S(e,M),g(e,t,M,"url")&&40===n(M)?34===n(M=b(e,M+1))||39===n(M)?(L=o.Function,void(M=t+4)):void function(){for(L=o.Url,M=b(e,M);M<e.length;M++){var t=e.charCodeAt(M);switch(p(t)){case 41:return void M++;case p.Eof:return;case p.WhiteSpace:return 41===n(M=b(e,M))||M>=e.length?void(M<e.length&&M++):(M=k(e,M),void(L=o.BadUrl));case 34:case 39:case 40:case p.NonPrintable:return M=k(e,M),void(L=o.BadUrl);case 92:if(u(t,n(M+1))){M=v(e,M)-1;break}return M=k(e,M),void(L=o.BadUrl)}}}():40===n(M)?(L=o.Function,void M++):void(L=o.Ident)}function f(t){for(t||(t=n(M++)),L=o.String;M<e.length;M++){var r=e.charCodeAt(M);switch(p(r)){case t:return void M++;case p.Eof:return;case p.WhiteSpace:if(l(r))return M+=y(e,M,r),void(L=o.BadString);break;case 92:if(M===e.length-1)break;var i=n(M+1);l(i)?M+=y(e,M+1,i):u(r,i)&&(M=v(e,M)-1)}}}t||(t=new r);for(var E=(e=String(e||"")).length,A=i(t.offsetAndType,E+1),C=i(t.balance,E+1),I=0,O=m(n(0)),M=O,N=0,R=0,D=0;M<E;){var P=e.charCodeAt(M),L=0;switch(C[I]=E,p(P)){case p.WhiteSpace:L=o.WhiteSpace,M=b(e,M+1);break;case 34:f();break;case 35:c(n(M+1))||u(n(M+1),n(M+2))?(L=o.Hash,M=S(e,M+1)):(L=o.Delim,M++);break;case 39:f();break;case 40:L=o.LeftParenthesis,M++;break;case 41:L=o.RightParenthesis,M++;break;case 43:d(P,n(M+1),n(M+2))?s():(L=o.Delim,M++);break;case 44:L=o.Comma,M++;break;case 45:d(P,n(M+1),n(M+2))?s():45===n(M+1)&&62===n(M+2)?(L=o.CDC,M+=3):h(P,n(M+1),n(M+2))?a():(L=o.Delim,M++);break;case 46:d(P,n(M+1),n(M+2))?s():(L=o.Delim,M++);break;case 47:42===n(M+1)?(L=o.Comment,1===(M=e.indexOf("*/",M+2)+2)&&(M=e.length)):(L=o.Delim,M++);break;case 58:L=o.Colon,M++;break;case 59:L=o.Semicolon,M++;break;case 60:33===n(M+1)&&45===n(M+2)&&45===n(M+3)?(L=o.CDO,M+=4):(L=o.Delim,M++);break;case 64:h(n(M+1),n(M+2),n(M+3))?(L=o.AtKeyword,M=S(e,M+1)):(L=o.Delim,M++);break;case 91:L=o.LeftSquareBracket,M++;break;case 92:u(P,n(M+1))?a():¤çêüçàíàññâáéáááíííáááéááááéæææéáááúéáéééñééééééúéééíóéíéééééúíéúééééééïéçéééééééèéèïáááóéíööéáéíááíííááóááááééöéááóéáéööáüéêãêêêãêêêêêéêêêéêêêêãôêêêêéêçççççççççççççççççüççççöççççüçéáááúéáóóéóáííóóíáéúéáíáóéáóéóáúáííúóéóáúúéúúáúéááíïïààààèìòùàìèìàòàèìòììòòààäöääääääüßáéíááóíúíéááéíáóóáóóéçëççççüçöüííúúíóííííóáííúóííííóíöðíðóóíúííáíóíííóúóúúíóíóæúúæíéúíúííþýääääèàèààúàúàààíèèàèèèè·èèèèàèóàíòàèèèèèïèèèáíéééääüèèèèèèèèèèòèòèèèòèèòèèèääöäääââàáààãôáéâáêý
+ You see the first 11 KB above and the last 18 KB below. The remaining 55 MB (99%) of the file are not displayed. 
+HM*Jk:(-2rXZ,tre2]yn5|-nJDQ*}UxR*NA+************59^rH*_[f:1)2)IQ6[2;~.-uIbVl;J2u{5:`P.zI~nTYIII,r8kcXqC7D\N04H***2B***}cW{H/6XThd(^rH9sRZ5***************hWWQ+n]tn9^{4/(^,GJ([Tv2;*hLP:,Zrk:UW3N;5t_rJh(.TM.@HM*Jk:(-2rXZ,tre2]L=\NV9n_;*@vN(*NA+************.NAB+z,Xc;|6{p:-9@@J\81V:S3.Q:^04rJ1.9_I0KvvJvpQw8kcXqC7D\N04H***2B***9S{MNPI[7)u0Gi]PpRZ5***************k)W.,WKGwJ1R/V:T3ho9\ma4(YrotI|(N::0g`i;+2)i;l(.TM.@HM*Jk:(-2rXZ,tre2]Ca.(c}|k-*Rgz-*NA+************,(``*Mqu5JPv:o9z4uqJ~tnM;UBvM;1??4(S1`::abd[Jyj?w8kcXqC7D\N04H***2B***+~J].n8oW^/r`~VroRZ5***************]*H;,xAz5:YB@Q:Q*R2;(RPwJcP-S;91=rJ*WrP:XKIQ:g(.TM.@HM*Jk:(-2rXZ,tre2]5mZw:]J9.*IT=.*NA+************`hEcV)iZoI3-Pn;b\RzI+1[2;TfKYI3g+S;*2G/(`ALq:P_-w8kcXqC7D\N04H***2B***2jpSgotcnP1jN~qtoRZ5***************RBKC,C535:Tof)IR*_5:}+lqJ05o2;J|-Q:])_CIEOkn9E=.TM.@HM*Jk:(-2rXZ,tre2]yh-Yj.5}-*oj~-*NA+************41Lrc`1Xc;(XGwJ]P@zI:HUq:-5QVJ.QE5:fFo@J|zoYI{I,r8kcXqC7D\N04H***2B***|Y3E-(mE9e*F7fpqoRZ5***************6*WK,x+^R;-8HZI~s~s9\G-S;5.BzIxt5;J24f[J2[3N;D=.TM.@HM*Jk:(-2rXZ,tre2]^r89@3De-*rkf-*NA+************`g(H;-tu5J2ni^IcD^7;XPR@J,Q*T90/-ZI/M}J(\d.uIR6Rr8kcXqC7D\N04H***2B***cyGx[L\gv?2AxAXpoRZ5***************_{1S,yh4t9WuXt9.aXO(,..6:9Q-S;3IIl:a;,3;33Cq:p(.TM.@HM*Jk:(-2rXZ,tre2]Bj*m^8a^-*lW`-*NA+************yJCf^)IDN9TB(5:bkWCI6}3rJ/;p)I0eI;J4wIZI~GWP:NO)r8kcXqC7D\N04H***2B***lvE5zE;3tNT}0WcooRZ5***************V0NZ,xD.6:+[nR;V,lqJ3SDrJ2^W/(7Jbi;JmLo9XgzYIi(.TM.@HM*Jk:(-2rXZ,tre2]KNgr{JLW-*\zY-*NA+************Y~1NT44Xc;[2)i;20Pn;Oypk:2dNi;UT`/(yXkS9/Mk/(}Mmr8kcXqC7D\N04H***2B***hQzV]Eb5ZAdb0HMooRZ5***************XV[a,pu^5:^M~qJ62]l:OjUP:,^Sq:R(vM;;@xvJJggP:g(.TM.@HM*Jk:(-2rXZ,tre2]}mKC]PXR-*gDT-*NA+************DkKcMOvu5J]d=4(,+hP:R0I2;]pdqJav[;JW^XO(Y[=4(KI5r8kcXqC7D\N04H***2B***TGZ2W(FEqD}MIfUnoRZ5***************Rbbh,MfXO([Zv2;Iv62;}RPS9`n~O(2(-n;\sdVJeB1P(j(.TM.@HM*Jk:(-2rXZ,tre2]^M^M?35K-*@wL-*NA+************[(qJp(+(QJ[|0P(4pi/(Ojgk:+uTYI0saU:QBm2;UWWo9.K[r8kcXqC7D\N04H***2B***7AElMmoCbtYnMQ/moRZ5***************-aYo,nfC5:(~NwJ5WI@J0[Aq:VyCT91L`::[k3\J\_~O(l(.TM.@HM*Jk:(-2rXZ,tre2]YCm\lr8F-*MGG-*NA+************4/:(-Lyv,;*nCT9/Ak/({sUo90*L7;5nq)Iy|ZM;R-72;xpHw8kcXqC7D\N04H***2B***JAAZ89K3Ur;b8lwloRZ5***************dn)v,I0(t99NH4(U(35:\v*rJ9NyR;W`3N;2dEi;2^e7;D=.TM.@HM*Jk:(-2rXZ,tre2];R7XYj^?-*OKA-*NA+************{\yG_3h@K:6vaU:K6*/(*IeR;3,KQ:5nvqJS|HM;-Ldl:GL5r8kcXqC7D\N04H***2B***x7.cby_[ZablT~hloRZ5***************08r|,y]7;J1/)/(])Yi;+O(N;ZZWJ(6kVrJ]0\uIQvCo9i(.TM.@HM*Jk:(-2rXZ,tre2]{DgwLrc:-*K=;-*NA+************~vl~DnMDN9_h`^I*jXO(^|d;J,Li::.m4n;YvdVJ/|aO(,?Rr8kcXqC7D\N04H***2B***NeXr9mJt:wC^-czkoRZ5***************;gI.-wG[2;U3q5:1s4S;V)._I]xJl:]PH4(_U8V:YCi::i(.TM.@HM*Jk:(-2rXZ,tre2]^\1Pr7A5-*mL6-*NA+************;p_2fUNDN91gaU:{txtI]2-uI+1Nt9zd:5:2tiCI,A?ZIPdbr8kcXqC7D\N04H***2B***zH[~G-j^sh{WmGqkoRZ5***************E:j4-poUP:ghDWJ]gwR;KXtn9.2lqJNsg5:M[:5:~-Il:D=.TM.@HM*Jk:(-2rXZ,tre2]^o6OCul3-*Xb5-*NA+************1jFZGr7WlJVVv[JXG@@J\XnR;HRbS9{7uqJas7ZIYh3\JTh-w8kcXqC7D\N04H***2B***gIhVx8Zo4@btf~MkoRZ5***************M[2;-mlgP:*oeM;TZ(i;Mj-2;PHm2;/iA2;^yj4(12g)Ii(.TM.@HM*Jk:(-2rXZ,tre2]C6b\fyx1-*UX2-*NA+************~vl~D~9Xc;0d\7;8:TzI*:3/(}keh;5yOt9~_8l:(xNwJRB8w8kcXqC7D\N04H***2B***BOpDQ5PP)(Fwl~DkoRZ5***************L_IA-MEWt9WjmqJ/OeX93wi^I`blO(bdeR;3vsU:[Ym@Jm(.TM.@HM*Jk:(-2rXZ,tre2];Fkjw]M/-*pS0-*NA+************6Apr-9ay8IZc+Y9RpU5:SWNJ(_vvVJ~h8l:5S;rJ[AlqJ~sHw8kcXqC7D\N04H***2B***++])e2G^6i3,@rujoRZ5***************Mh]G-,hd@JN9Rl:aYDWJ,,cVJ/L3N;2e.uI`JyR;W,H;Jg(.TM.@HM*Jk:(-2rXZ,tre2]ZZDvG)F+-*NA,-*NA+************3{su,JDs~;Y;ym;|({p:^;^R;U`i/(4ez)IMsLT9w0{p:VzHw8kcXqC7D\N04H***2B***68*QMoNF,Iv2MiTjoRZ5***************faiM-T|rCI4|0q:yeTYIY/-?I/||O(11B@J+_kn9*`0)Ih(.TM.@HM*Jk:(-2rXZ,tre2]xkV@Pqf*-*Br+-*NA+************Y}}29Wby8I}Wn7;]R{U:0U{U:Yl8K([G?4(WJ7_I+)ZVJzj?w8kcXqC7D\N04H***2B***hR.rxRnP6,u}}29joRZ5***************^KqS-}l7uI0\DrJZP._IUr);JY;c;J\g4n;\_l4(1I[2;D=.TM.@HM*Jk:(-2rXZ,tre2]|9fHN(s},*c**-*NA+************ieCut;l?TI3pn7;`8)N;X2lVJ5vr/(8(U7;7tR;J[Rwm;xp?w8kcXqC7D\N04H***2B***s_P/a?2*w@Vf;QJjoRZ5***************r2tY-v;z5:2s{/(^cW/(Ly^o93-}U:1vFn;*AuVJ0SMrJh(.TM.@HM*Jk:(-2rXZ,tre2]2\D+Dapx,*|sy,*NA+************0b4ZbEn@K:[]Ei;0Gb/(|Q+n;]d4S;CFYS9^s@uI9Q@@JK:xq8kcXqC7D\N04H***2B***0V};0^,^RZQC-TdioRZ5***************91t_-sxL5:NgCo9+8?ZI^wNwJXpR;J5L)wJ^I{p:WBd2;j(.TM.@HM*Jk:(-2rXZ,tre2]XID;m)laA+qj:B+NA+************byr~;{\_i9\Vc4(-1zk:YR+n;41FrJ3pOn;/J}J(2(pR;RXGr8giXqC7D\N04H***2B***:\AiNobpXho2,N]M{RZ5***************JjVz.Lb`o9Y*n;JPHNJ(*2HVJVI\R;\[4n;5s/K(,DMYIc*.5N.@HM*Jk:(-2rXZ,tre2]Dnugs9l0B+~FYB+NA+************0b4ZbP0@TIVuX::4eI;J4E._I}K/q:9^PwJQ^kn9Y,C7;NL)r8giXqC7D\N04H***2B***G|MxRlL2-OaDfAsO{RZ5***************bmzT1Fh])I]P.zIS(.6:7KyR;T?Il:[Zv2;3E?4([{e2;D+.5N.@HM*Jk:(-2rXZ,tre2]IwvBYsp_A+IF6B+NA+************Q7a8ms.EN9XDyR;:4+(JY,yYI5(pR;us2t9,1dh;|HS7;UTAw8giXqC7D\N04H***2B***3qy8164Ft{MT9TRM{RZ5***************PC(/4s{^P:/L3/(-AYi;ILPS9WW`/(0I(/(8cm@JL[UP:C+.5N.@HM*Jk:(-2rXZ,tre2]l{^;u~(-A+]r[A+NA+************x@t/Cu9t~;\=Et9~D3o929DCI1~+i;Fm62;+~f)I.GDrJPU)r8giXqC7D\N04H***2B***s^GiE[SG(^uU:KCO{RZ5***************,u^]6poUP:-X\R;`Yc4(^P-S;*~,;JVd@uI331V:38)i;C+.5N.@HM*Jk:(-2rXZ,tre2]wRug\|TZA+0M,B+NA+************Z3V/p)oz8IN*I2;UE*N;c:TzI`xr/(_4xvJ,IEJ(0}A@J{-[w8giXqC7D\N04H***2B***LU4robXy.7gVGxsS{RZ5***************[_h79~o.ZI8K-S;44f[J_(FrJ~BW::@^PwJ0A~VJ5/]l:l*.5N.@HM*Jk:(-2rXZ,tre2]K}9A{n7SB+AF~B+NA+************jn^;uc3|/:2FR2;{atS93Tv[J8_DrJz6{p:[Cr::0AcVJ~vHw8giXqC7D\N04H***2B***S=6Q;-q*n=)=Lrc\{RZ5***************X0?h;{@6n;R+N::N9(/(NjCo9t/[S9ZG_CIV:/q:66L7;l*.5N.@HM*Jk:(-2rXZ,tre2]Dm4KMEeJB+]BvB+NA+************tre2]xo)H;`_lO(S|-Q:~z]YIRZ`J(2;5N;V5gR;\)?uI+ERr8giXqC7D\N04H***2B***d-c)\=]82jc)MiT\{RZ5***************.O_D)sAm2;/bVrJ{vuX9-=vM;}g1T9~1-ZI.5-uI^eNCIC+.5N.@HM*Jk:(-2rXZ,tre2]Za9takTjB+`U?C+NA+************oF(ov^kATIZK[l:1CRl:\SQ4(5\hYI5?g7;0Lr::[ri/(y|Zw8giXqC7D\N04H***2B***x5q,,:/:FWUBXrQW{RZ5***************hNFv@UIGN;}q+/(XT`P:T0.Q:/Ci::ZYR@J_^e7;.,yYIc*.5N.@HM*Jk:(-2rXZ,tre2]+C.Z+,b:B+K\fB+NA+************\D.KU:jFN9|s^P:+x8Q:{d:T92:f@JVaqYI~0*Y9^;)i;VwQw8giXqC7D\N04H***2B***n3|kz}C+9?{-m~DP{RZ5***************m9xQCI3Et9.=7l:+/QVJ0h`^IP{CCI~BA7;xG3T97W7_I?+.5N.@HM*Jk:(-2rXZ,tre2]f?vDJOKx@+g6MA+NA+************bz{DWqjYlJ-Gc;J2XEN;}6E::W2q^I]8DCI35)N;701V:s1xq8giXqC7D\N04H***2B***n1j5D2t[Br:\OfLL{RZ5***************xQP+FSs`CIX-DT9[,p)I^/fl:_)pR;*1IM;Nv:o9U/h^I?+.5N.@HM*Jk:(-2rXZ,tre2]y5:6+u8?A+MFgA+NA+************l~-(?^U|8I_J}J(PN`J(U]i/(xO15:1I{p:8z@ZI+,G/(wC)r8giXqC7D\N04H***2B***:]J/jBc`hUSF_i9K{RZ5***************2uzYHN`wR;.J~qJWZ3N;^ma4(5v{/(3z{yIWQEJ(Wxj::l*.5N.@HM*Jk:(-2rXZ,tre2]o}Dk2?Ul@+WXCA+NA+************/Yn)b|F[c;[qNwJXIJ7;]yj4(QcotI_x/K(^8kJ(N0.l:zr-r8giXqC7D\N04H***2B***THcMrleUdG)*^c2L{RZ5***************/Qq2KWH5\J-q{yIv^gk:VKeX9[)Z;JR^tn9WirJ(M*RM;A+.5N.@HM*Jk:(-2rXZ,tre2]pnj9`2`LA+MJsA+NA+************fI)]Xg1~/:-AtJ(ONEi;^yX4(zOkn9Y`N/(*..2;y[tn9ZwHw8giXqC7D\N04H***2B***H/`x7-7EQ\.*buGO{RZ5***************7bOaMV9]@J(FOrJ~C2rJ\6+WJ.~=/(~W4n;:z@ZI3aS7;?+.5N.@HM*Jk:(-2rXZ,tre2]Y?ifB\_9A+RTdA+NA+************d7]{W)l?QJW2zyI\;gR;XymVJznfYI5||p:`vX4(0;GN;zrpq8giXqC7D\N04H***2B***++])eE)xcc4@JN0I{RZ5***************iJ8;PPCcVJ5B_CIS*.Q:]m7ZI6t`^IX)@@J([GwJ1Vu;JB+.5N.@HM*Jk:(-2rXZ,tre2],=eV=FB8A+=jcA+NA+************`hEcV//@QJ5__)I-P;WJ~P(o9TIhtIc:,wJ-8Z;J1/KQ:/UAw8giXqC7D\N04H***2B***d,Zx@y~7ExxG``*K{RZ5***************04?iRrx^P:R9*/(}J3T9XM7zIUE*/(/Mbi;540_I3mAK(B+.5N.@HM*Jk:(-2rXZ,tre2]UM4?hAIa@+ar7A+NA+************v/Gi]E6`f:d@o@J^,BK(Z~wM;3KR@JaV:K(-@*i;c*Pn;z^?w8giXqC7D\N04H***2B***tgb/F`ezmdiM}J^D{RZ5***************[?zAUp2dM;-Cr::XG7_I15Y/(~H8q:S372;Q|Uo9*+.Q:C+.5N.@HM*Jk:(-2rXZ,tre2]{5n]*L+k?+CT@@+NA+************w8b/^^g[lJ/8ZuIYPI@J_;ym;9ZIzI`-tO(XKvM;w)NP:y;Rr8giXqC7D\N04H***2B****u/B.sV22kfgp,D){RZ5***************BR1nWlc:T90N[@JSNW/(]2^R;*{Sl:-rJl:dkECI~_`5:g*.5N.@HM*Jk:(-2rXZ,tre2]?GX)uXU}?+jzS@+NA+************)5SiK]+]c;RDR@JVlnh;UffYI^gRVJ45PJ(Vi4Y9-,?uIvI)r8giXqC7D\N04H***2B***}cW{H+c+|J2=H`N){RZ5***************CRoDZWE5wJ7Z[[JT`F::naPwJ-QE5:[MqCIwPiP:`|mVJg*.5N.@HM*Jk:(-2rXZ,tre2]yK`KflO,@+C\X@+NA+************Vd)lnai~8If:f@JZRS7;7]d[J~vg5:hKXrJ[mOn;\W(T9XERr8giXqC7D\N04H***2B***;feJj(@46ed.vD`9{RZ5***************OsXp\OClVJx-(t9+R8V:VGZO(Wli/(`Sl;JFOkn9yJWP:h*.5N.@HM*Jk:(-2rXZ,tre2]7,z\Lmp(?+{Cj?+NA+************.NAB+95ETI^anR;ZvvVJ5Z[[J5KR@J0YhYI-oJl:VQd2;zGmr8giXqC7D\N04H***2B***.DGZ/gbEtA+R+01){RZ5***************e8}E_HtxYIY,BK(Kg:5:[f{/(43DCIWf+Y9`*=rJu\TYId*.5N.@HM*Jk:(-2rXZ,tre2]pz5r,r5G@+UEq@+NA+************]L@K:5iBH;X6IM;9FTzIO3Il:`_v[J57K@JZE.6:]`3N;U`\w8giXqC7D\N04H***2B***5/d5M1bQu1-_QT.H{RZ5***************I?+ra~,4rJ^FiU:U@2)IYxxtI0~4/(uFbS9]Sv[J~wPVJB+.5N.@HM*Jk:(-2rXZ,tre2]q~Y-4eU{@+.6NA+NA+************2tj;clSei9)Lx[JUi`i;Y?I2;XNN/(]d.ZIVBd2;cVcuI{g6w8giXqC7D\N04H***2B***?4tGP{J82R}CUW-F{RZ5***************{_fJd{wX::Y3_o9SZKYIby=n;R3mn9P6dM;ygU5:+`iP:?+.5N.@HM*Jk:(-2rXZ,tre2]*t}5qACV@+RA+A+NA+************0a+?G^L^c;\bRzI][Sq:WoK)IveftIPsCT9UyLT9V/cVJ}^br8giXqC7D\N04H***2B***LT+WTUIaWf:,pDiH{RZ5***************G(nwfw`dqJ`YIzI3^`J(4bDWJYK(/(U?mh;7]m[Ja~\2;?+.5N.@HM*Jk:(-2rXZ,tre2]56QUXw,-A+J7UA+NA+************TPKT7EIbf:TN3/(~*qP:+2P/(^dwm;/nNCI+DHZI_Mt/(wF5r8giXqC7D\N04H***2B***),bGkoCzsF_M,]sL{RZ5***************,y`Pinc}S9.}^P:Qd}S9|jCo9u|_U:f:][J;cd[J[mq)IB+.5N.@HM*Jk:(-2rXZ,tre2]H:vOb7Gh@+f.)A+NA+************=,8NK5Ffi9OE*i;}]n7;MB3i;UC2)I5A?uI.Ay)I/jOn;{s?w8giXqC7D\N04H***2B***tfYi*civwJkm8lwK{RZ5***************0nc~k~xRuIa;5N;wMik:uR}n9YWm2;PE(/(_(XrJa5x2;h*.5N.@HM*Jk:(-2rXZ,tre2]Z[i2Ig:j@+rSAA+NA+************^WmGqW+}5J-ZNo9`Pz^I{|lX9VxsU:Ts^P:X/?;Ja8Cq:O\6w8giXqC7D\N04H***2B***;e\/OGc\JJk(P/yG{RZ5***************tv_WnS^MrJjIf@J]*1P(YM@@J:=FWJW)pR;Xrr/(yMNP:?+.5N.@HM*Jk:(-2rXZ,tre2]Wk-GGu-|@+^qOA+NA+************[;h/Ug2HK:S|HM;,=(Y9*T(o9Oj-2;5BqCI3;Gi;Z(XrJKX)r8giXqC7D\N04H***2B***68*QMaxgfn4\OfLF{RZ5***************WUI0qmWbS9U0RM;*a=n;S3Il:]S;rJ5:,wJX/cVJ*IWt9B+.5N.@HM*Jk:(-2rXZ,tre2]hOWClRS}@+mJSA+NA+************l*7WZWn_c;2q[;J05fl:5_~;J0V~VJXOS7;,F\R;\Vd@J~[)r8giXqC7D\N04H***2B***?5}bkPP|m=nl/Q\N{RZ5***************}N{]sHk]YI2Z*\J1/pYI[@`::Pf,;J+I\R;9FTzI/ScuIh*.5N.@HM*Jk:(-2rXZ,tre2]X*{((0?k@+=_BA+NA+************c-9E({/_lJ2nvqJ*ngk:^MDrJQy?2;81euI3ByR;KaC5:/USw8giXqC7D\N04H***2B***BPy_l=sDT1luJl\K{RZ5***************dH=7vvJm2;8Kz^IM0dh;MBE/(~4bJ(/Ld2;.8uqJRd1o9d*.5N.@HM*Jk:(-2rXZ,tre2]b3T-7g{@A+(iiA+NA+************2tj;c8.df:c-n;J8=FWJZ``i;5+|^I-c`o9UCA7;-5Y/(Uvkr8giXqC7D\N04H***2B***AG^DljfaK-HBXrQI{RZ5***************2Qbexz@hCI+}LT90^i/(c\Hn;VlB)IU0zk:fHFWJ`;^R;d*.5N.@HM*Jk:(-2rXZ,tre2]U?eISr=r@+BoEA+NA+************TR]5n,XEH;]cET9.)P/(HUYS9Ryp5:Y~YVJ.ER@J,fAl:ThQw8giXqC7D\N04H***2B***gH_;]N[zcG5Iei0I{RZ5***************Q;Q){+6=rJ][Aq:bGp7;ZxxYIXaqYIVo]YI3*1V:]5H;Jl*.5N.@HM*Jk:(-2rXZ,tre2]bFt:?A]}@+mJSA+NA+************,=i{EG\coIzRkn96bztI*I3N;2E[[J0mAK(zAmS91e_rJQ|6r8giXqC7D\N04H***2B***),bGk5~gRPUbd,VJ{RZ5***************X+dT+Q`Sq:bPp7;ZD._I}jpk:6`*\J./5i;7F)wJ_\l4(h*.5N.@HM*Jk:(-2rXZ,tre2]I|3FG~]WA+G)0B+NA+************`g(H;[c.0:bh3\J]xAQ:`nNCI7]d@J~[bS9wXtS92U*N;TN8w8giXqC7D\N04H***2B***8KiMi6E,`8s(P/yO{RZ5***************[+(..u5@2;Z]rk:+jaO(FLbS9V;2rJ|6`U:ZfA2;+2?ZIg*.5N.@HM*Jk:(-2rXZ,tre2]RsEmNT[sA+jZIB+NA+************zTgGz/z-9I*IN/(Vr);J0qNCI5=TzI1+0_Ia|jO(OmLo9V37r8giXqC7D\N04H***2B***5.[o1r:y3Y^s(H;Q{RZ5***************2lc]0ou-l:T*@2;YxGVJ^p@uIan`^IUuxtIVfTYIS~kqJk*.5N.@HM*Jk:(-2rXZ,tre2]LaYSL{p1A+MC^A+NA+************byr~;0FITIr~ZS9RzD::X5lVJTr);J0DY/(:7K@Jf_~;J-.Rw8giXqC7D\N04H***2B***gH_;]16AWQlDb/^H{RZ5***************~PV73N1?;J*rT)ISKdl:YLJq:5K-S;\,g)I[Yd@JWX4n;@+.5N.@HM*Jk:(-2rXZ,tre2]UR:|pJsJ@+6@y@+NA+************JK;B4sT.9IWMIzI^m7ZIbPl;J`F(Y91L/q:VKeX97++rJPL5r8giXqC7D\N04H***2B***XlzesG[64eck{5AD{RZ5***************\edd5W6KzIU7rU:-Cd2;_\lO(,RSq:9IarJ^[e7;U@/V:@+.5N.@HM*Jk:(-2rXZ,tre2]pYKGjfwg@+rR)A+NA+************|e?c_,=GH;{DvS9/U8q:Mvpk:`ec4(=Lo@J.onh;QWEN;|8Ir8giXqC7D\N04H***2B***Yu@,t9w]7fcZNo[F{RZ5***************Tqm(8LNJq:deRzI2nNCI_VMrJx6i::WRnR;bVHn;ay=n;e*.5N.@HM*Jk:(-2rXZ,tre2]RutDbuiM@+L,w@+NA+************;oVlJkTGH;++7Q:aY;WJM42)I28?uI*=Rl:M|^5:{zbqJO^br8giXqC7D\N04H***2B***Yt7fXa(P*8s/*`{G{RZ5***************m3oi:prLT9w|;t96.sCIZo/6:1@z5:VKm2;3-^R;;.jCIg*.5N.@HM*Jk:(-2rXZ,tre2]1bQ_^]Kd@+VQ7A+NA+************3}0Wc.talJ1|B7;4YV)IS|-2;7i*wJX6IM;W7rU:?U)wJ+B[r8giXqC7D\N04H***2B***Pw9T:M^5q{CL|SmD{RZ5***************y/?B=I_SM;dbc4(|9vM;-/?ZI\*+rJ[dq)IUC\R;U^7uIj*.5N.@HM*Jk:(-2rXZ,tre2]iF,0rr^R@+XS+A+NA+************|d6HD5NON9:.+WJdDGN;.+_5:wpuX9dbc4(649zI46^R;|upq8giXqC7D\N04H***2B***7AElM+-Qb=X_b)tC{RZ5***************]N5o?K.Q;J90b4(_jFn;Y^4n;1}rCIQ3q5:Y/HuI6Q.zI@+.5N.@HM*Jk:(-2rXZ,tre2]/P8o+-5E@+P6q@+NA+************d6T`(wX~~;~T\7;Xs*rJT@A7;~0[2;RKm2;^)pR;W7E::R_-w8giXqC7D\N04H***2B***lvE5zLKzO0kLt/CF{RZ5***************VPlFB/qm@J{e/Q:V^7uI_-JZIxDE5:Wi/K([l8l:~EiU:d*.5N.@HM*Jk:(-2rXZ,tre2]4?,m1D-^@+|m5A+NA+************Q6XrQ0909I,8bJ(|S{k:1JVYIUTWJ(M*@l:WvmVJX[h)IGC)r8giXqC7D\N04H***2B***/Mbu/2}gk{c35ixA{RZ5***************?0xsD0}EwJcq`CIWB(5:2Y.;J1~FJ(\T[l:[]Ni;{wGVJg*.5N.@HM*Jk:(-2rXZ,tre2]b);{+`t.@+ab\@+NA+************(xq2K?*dc;f_Z4(}suX9-FrU:~37Q:`PcuIR-dM;V]*3;T3@r8giXqC7D\N04H***2B***gH_;]i7^_qD1+WlH{RZ5***************+R/KGK\{k:^jdqJ5ndqJ1R*i;b_7_I/C@l:GRkn9cVZ4(@+.5N.@HM*Jk:(-2rXZ,tre2]t_8:Lg{r@+-1HA+NA+*************-E{{zJ**(Y\*wJUHv2;0h`^I4:,wJ0X\7;[\l4(,}-l:MIGr8giXqC7D\N04H***2B***\;=~tt;BQ0~t=?,K{RZ5***************2FixIz_EN;]bc4(Pg1T9YQWJ(.X`/(0bIVJ7-1q:K[15:?+.5N.@HM*Jk:(-2rXZ,tre2]g{tJq^?)A+_~mA+NA+************yI:KCjb**(vX:5:ZoFt9Y5cVJ*Wik:-=i::*Trk:6nI;JObHw8giXqC7D\N04H***2B***n2sP_N[;aR~-m~DS{RZ5***************YV-RL{S[l:yFPS9Qm1T9`Dc;J`GpR;fKarJ/Ld2;4Kd[JD+.5N.@HM*Jk:(-2rXZ,tre2]nfPB/{+7B+lhaB+NA+************m3RrZdqdc;]Pd@Jxm~s9.DPi;|zoYIGp62;Wx,;J,,cqJR|6r8giXqC7D\N04H***2B***EjlARC+]9v_jv,;T{RZ5***************9o6-O,\7_I,:iU:wv;t9S6vh;+AcVJ9]Hn;S|gP:/;bJ(A+.5N.@HM*Jk:(-2rXZ,tre2]qO-T@`lfA+MT(B+NA+************c/K{rdeMK:N9IQ:d9+(JNsUo9XC2)I{@;rJ,L`::UroYIqU6w8giXqC7D\N04H***2B***UQ~hr|}6s=p1x2BN{RZ5***************ims\QI*3t9Q0.Q:.X+t9(Ff@Jfn_rJ[b[@J*VPS9N6vh;e*.5N.@HM*Jk:(-2rXZ,tre2].S^]A.v:A+V`dA+NA+************8TZoI:0hoI/onh;3XWJ(Y?dh;2uAQ:/ni^I\^.;Jas[VJZ]\w8giXqC7D\N04H***2B***VY;iWX|l}dQX@K:G{RZ5***************]BQ6TRR;rJM-.Q:{9rU:2;cqJ.,G/(YrsU:Q9dh;1Jt/(k*.5N.@HM*Jk:(-2rXZ,tre2]Ge,0yaOH@+Q:t@+NA+************[;h/U})MTI4kmqJ+{FJ(/8lVJ`sz)I`V~VJZ+vX9W:`::y,@r8giXqC7D\N04H***2B***Eku\m.3LxZ2ASiKG{RZ5***************29VcVV[CK(1XJq:,m=n;WLwm;/,?;J,@(Y9.8,3;[]nX9e*.5N.@HM*Jk:(-2rXZ,tre2]8`66i?S}@+)iWA+NA+*************,(``dVMTI(I5wJ2[W/(Yl`i;*{G;JXvdVJ/7MT9_D6n;NF,r8giXqC7D\N04H***2B***^LjDZi+2bBuLt/CP{RZ5***************q*:(Y}x*rJ]Du;J_yX4(YIVYI`n3wJe19zI0@I2;08QVJB+.5N.@HM*Jk:(-2rXZ,tre2])}7/tr1U_A/qrgANA+************0a+?G*g30:46gR;:+s^IPj:o9R=2)I]d7;J_;^R;|(A7;XKAw860*lC7D\N04H***2B***VX2N(y2+GQWh(ZYptTZ5***************aKD4rUIYi;xP9)IToaU:Zx/K(]YvvJ-CEJ(UxsU:\Pd[Jn(I5NO?HM*Jk:(-2rXZ,tre2]b|xZ-r+O/;x7x4;NA+************,)rAaob36J`qi^I1H@zI,FN/(S?dh;^(FrJZ{x)IX]rJ(sryq860*lC7D\N04H***2B***x6zGG{j/1H^a\~_qbTZ5***************Y-]PCMZ4n;^5Lq:Y{sU:VI;)IVxo)I+.zP:UH`J(d7KzIo(I5NO?HM*Jk:(-2rXZ,tre2],chdNZWE3*gIf6*NA+************v.)NBJTRQJ8.e;JZGz^I|}f)I.dwm;_-4rJ{\`5:[)7zIFF5r860*lC7D\N04H***2B***7@(Q2lr4RJG(``*noRZ5***************}9oATu{CT9U.W::Y)qCIx[:o93qvqJPgtS9:q.ZI`*kO(hFaEI=@HM*Jk:(-2rXZ,tre2]?m:.Ue-)**\q=**NA+************id:ZY;i4*(/Dbi;2XAq:74FrJ-25N;{(/q:iR5\J^,Tl:NdYr8tA6sC+^`**Z3V/pla-Nfz8UW-[n@*******</script><script>setProgress(.749)</script>
+    <script>
+      const getProjectData = (function() {
+        const storage = scaffolding.storage;
+        storage.onprogress = (total, loaded) => {
+          setProgress(interpolate(0.75, 0.98, loaded / total));
+        };
+        
+        let zip;
+        // Allow zip to be GC'd after project loads
+        vm.runtime.on('PROJECT_LOADED', () => (zip = null));
+        const findFileInZip = (path) => zip.file(path) || zip.file(new RegExp("^([^/]*/)?" + path + "$"))[0];
+        storage.addHelper({
+          load: (assetType, assetId, dataFormat) => {
+            if (!zip) {
+              throw new Error('Zip is not loaded or has been closed');
+            }
+            const path = assetId + '.' + dataFormat;
+            const file = findFileInZip(path);
+            if (!file) {
+              throw new Error('Asset is not in zip: ' + path)
+            }
+            return file
+              .async('uint8array')
+              .then((data) => storage.createAsset(assetType, dataFormat, data, assetId));
+          }
+        });
+        return () => (async () => {
+        const base85decode = e=>{const n=e=>(40===e&&(e=60),41===e&&(e=62),e-42),t=e.indexOf(","),o=+e.substring(0,t).split("").map((e=>String.fromCharCode(e.charCodeAt(0)-49))).join(""),s=new ArrayBuffer((r=o)%4==0?r:r+(4-r%4));var r;const i=new Uint32Array(s);for(let o=t+1,s=0;o<e.length;o+=5,s++)i[s]=85*n(e.charCodeAt(o+4))*85*85*85+85*n(e.charCodeAt(o+3))*85*85+85*n(e.charCodeAt(o+2))*85+85*n(e.charCodeAt(o+1))+n(e.charCodeAt(o));return new Uint8Array(s,0,o)};
+        const dataElements = Array.from(document.querySelectorAll('script[type="p4-project"]'));
+        const result = base85decode(dataElements.map(i => i.textContent).join(''));
+        dataElements.forEach(i => i.remove());
+        return result;
+      })().then(async (data) => {
+          zip = await Scaffolding.JSZip.loadAsync(data);
+          const file = findFileInZip('project.json');
+          if (!file) {
+            throw new Error('project.json is not in zip');
+          }
+          return file.async('arraybuffer');
+        });
+      })();
+    </script>
+  <script>
+    const run = async () => {
+      const projectData = await getProjectData();
+      await scaffolding.loadProject(projectData);
+      setProgress(1);
+      loadingScreen.hidden = true;
+      if (false) {
+        scaffolding.start();
+      } else {
+        launchScreen.hidden = false;
+        launchScreen.addEventListener('click', () => {
+          launchScreen.hidden = true;
+          scaffolding.start();
+        });
+        launchScreen.focus();
+      }
+    };
+    run().catch(handleError);
+  </script>
+</body>
+</html>
