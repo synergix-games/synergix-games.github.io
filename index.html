@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synergix Arcade</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js"></script>
+</head>
+<body>
+  <header>
+  <h1>Synergix Arcade</h1>
+  <div id="online-users">Online: FETCHING</div>
+  <div class="search-container">
+    <input type="text" id="game-search" placeholder="Search games..." oninput="searchGames()">
+    <select id="badge-filter" onchange="filterByBadge()">
+    <option value="all">All Badges</option>
+    <option value="popular">Popular</option>
+    <option value="new">New</option>
+    <option value="exclusive">Exclusive</option>
+    <option value="trending">Trending</option>
+    </select>
+  </div>
+  </header>
+
+  <main>
+  <p>All games found on this page are made in the Scratch game engine.</p>
+  <section id="game-list">
+    <div class="game-card" data-name="Glow Dodge" data-badges="popular trending" onclick="playGame('glow-dodge')">
+    <div class="badges">
+      <span class="badge popular">Popular</span>
+      <span class="badge trending">Trending</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/716603517_480x360.png" alt="Glow Dodge">
+    <h2>Glow Dodge</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★★★</div>
+      <span>4.8/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">2274</span></span>
+      <span>Difficulty: Medium</span>
+      </div>
+      <p>Genre: Arcade</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="Appel" data-badges="new" onclick="playGame('appel')">
+    <div class="badges">
+      <span class="badge new">New</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/60917032_480x360.png" alt="Appel">
+    <h2>Appel</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★★☆</div>
+      <span>4.2/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">1182</span></span>
+      <span>Difficulty: Hard</span>
+      </div>
+      <p>Genre: Platformer</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="CUBES" data-badges="exclusive popular" onclick="playGame('cubes')">
+    <div class="badges">
+      <span class="badge exclusive">Exclusive</span>
+      <span class="badge popular">Popular</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/948573479_480x360.png" alt="CUBES">
+    <h2>CUBES</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★★☆</div>
+      <span>4.5/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">3513</span></span>
+      <span>Difficulty: Medium</span>
+      </div>
+      <p>Genre: Puzzle</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="Geometry Dash" data-badges="popular trending" onclick="playGame('geometry-dash')">
+    <div class="badges">
+      <span class="badge popular">Popular</span>
+      <span class="badge trending">Trending</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/105500895_480x360.png" alt="Geometry Dash">
+    <h2>Geometry Dash</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★★★</div>
+      <span>4.9/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">4582</span></span>
+      <span>Difficulty: Hard</span>
+      </div>
+      <p>Genre: Rhythm</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="Blob" data-badges="exclusive" onclick="playGame('blob')">
+    <div class="badges">
+      <span class="badge exclusive">Exclusive</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/139556829_480x360.png" alt="Blob">
+    <h2>Blob</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★☆☆</div>
+      <span>3.8/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">850</span></span>
+      <span>Difficulty: Easy</span>
+      </div>
+      <p>Genre: Platformer</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="Bloons" data-badges="new trending" onclick="playGame('bloons')">
+    <div class="badges">
+      <span class="badge new">New</span>
+      <span class="badge trending">Trending</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/318213127_480x360.png" alt="Bloons">
+    <h2>Bloons</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★★☆</div>
+      <span>4.3/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">2143</span></span>
+      <span>Difficulty: Medium</span>
+      </div>
+      <p>Genre: Tower Defense</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="Vectoid" data-badges="exclusive" onclick="playGame('vectoid')">
+    <div class="badges">
+      <span class="badge exclusive">Exclusive</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/670754400_282x210.png" alt="Vectoid">
+    <h2>Vectoid</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+      <div class="stars">★★★★☆</div>
+      <span>4.4/5</span>
+      </div>
+      <div class="game-stats">
+      <span>Plays: <span class="number-plays">1946</span></span>
+      <span>Difficulty: Hard</span>
+      </div>
+      <p>Genre: Shooter</p>
+    </div>
+    </div>
+
+    <div class="game-card" data-name="Crystal Seeker" data-badges="exclusive popular trending" onclick="playGame('crystal-seeker')">
+    <div class="badges">
+      <span class="badge exclusive">Exclusive</span>
+      <span class="badge popular">Popular</span>
+      <span class="badge trending">Trending</span>
+    </div>
+    <img src="https://uploads.scratch.mit.edu/get_image/project/463553665_480x360.png" alt="Crystal Seeker">
+    <h2>Crystal Seeker</h2>
+    <div class="play-overlay">
+      <div class="play-button">▶</div>
+    </div>
+    <div class="details">
+      <div class="rating">
+        <div class="stars">★★★★★</div>
+        <span>4.8/5</span>
+        </div>
+      <div class="game-stats">
+        <span>Plays: <span class="number-plays">6593</span></span>
+        <span>Difficulty: Medium</span>
+      </div>
+      <p>Genre: Adventure</p>
+    </div>
+    </div>
+    
+    <div class="game-card" data-name="Chess" data-badges="new" onclick="playGame('chess')">
+      <div class="badges">
+        <span class="badge new">New</span>
+      </div>
+      <img src="https://uploads.scratch.mit.edu/get_image/project/956410040_480x360.png" alt="Chess">
+      <h2>Chess</h2>
+      <div class="play-overlay">
+        <div class="play-button">▶</div>
+      </div>
+      <div class="details">
+        <div class="rating">
+          <div class="stars">★★★★☆</div>
+          <span>4.3/5</span>
+        </div>
+        <div class="game-stats">
+          <span>Plays: <span class="number-plays">534</span></span>
+          <span>Difficulty: Medium</span>
+        </div>
+        <p>Genre: Strategy</p>
+      </div>
+    </div>
+
+    <div class="game-card" data-name="Drifters" data-badges="new" onclick="playGame('drifters')">
+      <div class="badges">
+        <span class="badge new">New</span>
+      </div>
+      <img src="drifters.png" alt="Drifters">
+      <h2>Drifters</h2>
+      <div class="play-overlay">
+        <div class="play-button">▶</div>
+      </div>
+      <div class="details">
+        <div class="rating">
+          <div class="stars">★★★★☆</div>
+          <span>4.3/5</span>
+        </div>
+        <div class="game-stats">
+          <span>Plays: <span class="number-plays">142</span></span>
+          <span>Difficulty: Easy</span>
+        </div>
+        <p>Genre: Simulator</p>
+      </div>
+    </div>
+  </section>
+  </main>
+  <script src="simulation.js"></script>
+</body>
+</html>
